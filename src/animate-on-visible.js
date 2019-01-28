@@ -13,7 +13,7 @@ import * as elementVisibility from "./common/element-visibility.js";
  */
 export function initializeAnimateOnVisible(targetSelector, fullyOnScreen) {
 
-	var fullyOnScreen = typeof(fullyOnScreen) === 'boolean' ? fullyOnScreen : true;
+	var fullyOnScreen = typeof(fullyOnScreen) === 'boolean' ? fullyOnScreen : false;
 	var elements = document.querySelectorAll(targetSelector);
 	
 	var i = 0;
