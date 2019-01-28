@@ -1,4 +1,5 @@
 import * as animationTiming from "./animation-timing.js";
+import * as documentState from "./common/document-state.js";
 
 /**
  * Lightweight library providing fine-grained control of CSS animation timing
@@ -23,5 +24,7 @@ window.animationControl = {
 	},
 }
 
-window.animationControl.applyTimingValues( "delay-", [ "animation-delay", "-webkit-animation-delay" ] );
-window.animationControl.applyTimingValues( "duration-", [ "animation-duration", "-webkit-animation-duration" ] );
+documentState.onDocumentInteractive(function() {
+	window.animationControl.applyTimingValues( "delay-", [ "animation-delay", "-webkit-animation-delay" ] );
+	window.animationControl.applyTimingValues( "duration-", [ "animation-duration", "-webkit-animation-duration" ] );
+})
