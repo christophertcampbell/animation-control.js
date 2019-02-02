@@ -131,6 +131,9 @@ export function initializeAnimateOnVisible(targetSelector, fullyOnScreen) {
 		// Remove classes
 		el.className = "";
 
+		// Make sure element is visible, in case it was hidden until animation
+		el.style.visibility = "visible";
+
 		// Trigger reflow - This is key to making the animation play again
 		// @see https://css-tricks.com/restart-css-animation/
 		void el.offsetWidth;

@@ -45,4 +45,5 @@ documentState.onDocumentInteractive(function() {
 
 documentState.onDocumentReady(function() {
 	var defaultAnimationSet = window.animationControl.newAnimationSet( ".animated", false );
+	defaultAnimationSet.hideUntilAnimated(".fadeIn");
 });
