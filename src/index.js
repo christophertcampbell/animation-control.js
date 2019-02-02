@@ -1,6 +1,6 @@
 import * as animationTiming from "./animation-timing.js";
-import * as animateOnVisible from "./animate-on-visible.js";
 import * as documentState from "./common/document-state.js";
+import animationSet from "./animation-set.js";
 
 /**
  * Lightweight library providing fine-grained control of CSS animation timing
@@ -25,14 +25,17 @@ window.animationControl = {
 	},
 
 	/**
-	 * Delay CSS animation until an element is within view
+	 * Initialize a new animation set for delaying CSS animation
+	 * until an element is within view
 	 * 
 	 * @param {string} targetSelector A CSS selector which identifies the element(s) to delay animation for
 	 * @param {boolean} fullyOnScreen True to check for fully on screen, false to check for partially on screen; Default: false
+	 * 
+	 * @return {animationSet}
 	 */
-	animateOnVisible: function(targetSelector, fullyOnScreen) {
-		animateOnVisible.initializeAnimateOnVisible(targetSelector, fullyOnScreen);
-	}
+	newAnimationSet: function(targetSelector, fullyOnScreen) {
+		return new animationSet(targetSelector, fullyOnScreen);
+	},
 }
 
 documentState.onDocumentInteractive(function() {
@@ -41,5 +44,5 @@ documentState.onDocumentInteractive(function() {
 })
 
 documentState.onDocumentReady(function() {
-	window.animationControl.animateOnVisible( ".animated", false );
+	var defaultAnimationSet = window.animationControl.newAnimationSet( ".animated", false );
 });
