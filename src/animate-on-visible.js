@@ -13,12 +13,129 @@ import * as elementVisibility from "./common/element-visibility.js";
  */
 export function initializeAnimateOnVisible(targetSelector, fullyOnScreen) {
 
-	var fullyOnScreen = typeof(fullyOnScreen) === 'boolean' ? fullyOnScreen : false;
-	var elements = document.querySelectorAll(targetSelector);
+	var targetSelector = typeof(targetSelector) === "string" ? targetSelector : ".animated";
+	var fullyOnScreen = typeof(fullyOnScreen) === "boolean" ? fullyOnScreen : false;
+
+	enqueueOffscreenElements();
+	if (hasDelayedElements()) {
+		addEventHandlers();
+	}
+
+	/**
+	 * Enqueue off-screen elements to be animated when they become visible
+	 */
+	function enqueueOffscreenElements() {
+		var elements = document.querySelectorAll(targetSelector);
+		elements.forEach(el => {
+			if (!elementIsOnScreenMatch(el)) {
+				// Element is not an on-screen match, enqueue it
+				enqueueElement(el);
+			}
+		})
+	}
+
+	/**
+	 * Returns true if the element matches fully/partially on screen, false otherwise
+	 * 
+	 * @param {HTMLElement} el 
+	 */
+	function elementIsOnScreenMatch(el) {
+		return fullyOnScreen
+			? elementVisibility.isElementFullyOnScreen(el)
+			: elementVisibility.isElementPartiallyOnScreen(el);
+	}
+
+	/**
+	 * Enqueue a single element
+	 * 
+	 * @param {HTMLElement} el 
+	 */
+	function enqueueElement(el) {
+		// Add the identifying "enqueued" class
+		el.className = ( el.className ? el.className + " " : "" ) + "animate-on-visible";
+
+		// Add the element to a collection to watch during scroll events
+		if (! window.delayedElements) window.delayedElements = [];
+		window.delayedElements.push(el);
+	}
+
+	/**
+	 * Dequeues a single element
+	 * 
+	 * @param {HTMLElement} el 
+	 */
+	function dequeueElement(el) {
+		// Remove the delay class from the element
+		el.className = el.className.replace(/(\s)*animate-on-visible/mig, "");
+
+		// Remove the element from the queue
+		if (window.delayedElements && window.delayedElements.forEach) {
+			window.delayedElements = window.delayedElements.filter(delayedEl => {
+				return delayedEl !== el;
+			})
+		}
+	}
 	
-	var i = 0;
-	elements.forEach((el) => {
-		// TOOD: In progress
-	});
+	/**
+	 * Returns true if there are delayed elements queued, false otherwise
+	 */
+	function hasDelayedElements() {
+		return window.delayedElements && window.delayedElements.length;
+	}
+
+	/**
+	 * Listen for scroll event and check if any elements should be animated
+	 */
+	function addEventHandlers() {
+		window.addEventListener("scroll", animateOnScreenElements);
+		window.addEventListener("resize", animateOnScreenElements);
+	}
+
+	/**
+	 * Stop listening for scroll events
+	 */
+	function removeEventHandlers() {
+		window.removeEventListener("scroll", animateOnScreenElements);
+		window.removeEventListener("resize", animateOnScreenElements);
+	}
 	
+	/**
+	 * Begin animation for any elements that are now on screeen
+	 */
+	function animateOnScreenElements() {
+		window.delayedElements.forEach(el => {
+			if (elementIsOnScreenMatch(el)) {
+				// Element is an on-screen match, animate it
+				animateElement(el);
+				dequeueElement(el);
+			}
+		})
+
+		if (! hasDelayedElements()) {
+			// No more delayed elements
+			delete window.delayedElements;
+			removeEventHandlers();
+		}
+	}
+
+	/**
+	 * Trigger an animation by removing/adding the element's
+	 * css classees and triggering a reflow
+	 * 
+	 * @param {HTMLElement} el 
+	 */
+	function animateElement(el) {
+		// Store the className (minus the delay class) for re-adding
+		var className = el.className;
+		
+		// Remove classes
+		el.className = "";
+
+		// Trigger reflow - This is key to making the animation play again
+		// @see https://css-tricks.com/restart-css-animation/
+		void el.offsetWidth;
+
+		// Re-add classes
+		el.className = className;
+	}
 }

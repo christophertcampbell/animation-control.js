@@ -41,5 +41,5 @@ documentState.onDocumentInteractive(function() {
 })
 
 documentState.onDocumentReady(function() {
-	window.animationControl.animateOnVisible( ".animated" );
+	window.animationControl.animateOnVisible( ".animated", false );
 });
