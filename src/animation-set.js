@@ -14,7 +14,7 @@ export default function animationSet(targetSelector, fullyOnScreen) {
 	// Initilize the set
 	animateOnVisible.initializeAnimateOnVisible(parentSetSelector, fullyOnScreen);
 
-	// Return the methods we want to be publically accessible
+	// Return the methods we want to be publicly accessible
 	return {
 		/**
 		 * Hide the specified elements until they are animated
