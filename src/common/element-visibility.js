@@ -31,3 +31,16 @@ export function isElementPartiallyOnScreen(el) {
 	
 	return (partiallyOnScreenVert === true && partiallyOnScreenHoriz === true);
 }
+
+/**
+ * Returns true if the element matches fully/partially on screen, false otherwise
+ * 
+ * @param {HTMLElement} el
+ * @param {boolean} (Optional) True to check if the element is fully on screen, false to check if partially on screen.  Default: false
+ */
+export function isOnScreenMatch(el, fullyOnScreen) {
+	var fullyOnScreen = typeof(fullyOnScreen) === "boolean" ? fullyOnScreen : false;
+	return fullyOnScreen
+		? isElementFullyOnScreen(el)
+		: isElementPartiallyOnScreen(el);
+}

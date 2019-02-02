@@ -27,22 +27,11 @@ export function initializeAnimateOnVisible(targetSelector, fullyOnScreen) {
 	function enqueueOffscreenElements() {
 		var elements = document.querySelectorAll(targetSelector);
 		elements.forEach(el => {
-			if (!elementIsOnScreenMatch(el)) {
+			if (!elementVisibility.isOnScreenMatch(el, fullyOnScreen)) {
 				// Element is not an on-screen match, enqueue it
 				enqueueElement(el);
 			}
 		})
-	}
-
-	/**
-	 * Returns true if the element matches fully/partially on screen, false otherwise
-	 * 
-	 * @param {HTMLElement} el 
-	 */
-	function elementIsOnScreenMatch(el) {
-		return fullyOnScreen
-			? elementVisibility.isElementFullyOnScreen(el)
-			: elementVisibility.isElementPartiallyOnScreen(el);
 	}
 
 	/**
@@ -104,7 +93,7 @@ export function initializeAnimateOnVisible(targetSelector, fullyOnScreen) {
 	 */
 	function animateOnScreenElements() {
 		window.delayedElements.forEach(el => {
-			if (elementIsOnScreenMatch(el)) {
+			if (elementVisibility.isOnScreenMatch(el, fullyOnScreen)) {
 				// Element is an on-screen match, animate it
 				animateElement(el);
 				dequeueElement(el);

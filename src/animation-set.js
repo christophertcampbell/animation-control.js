@@ -11,7 +11,6 @@ export default function animationSet(targetSelector, fullyOnScreen) {
 
 	var parentSetSelector = typeof(targetSelector) === "string" ? targetSelector : ".animated";
 	var fullyOnScreen = typeof(fullyOnScreen) === "boolean" ? fullyOnScreen : false;
-
 	// Initilize the set
 	animateOnVisible.initializeAnimateOnVisible(parentSetSelector, fullyOnScreen);
 
@@ -30,12 +29,8 @@ export default function animationSet(targetSelector, fullyOnScreen) {
 		hideUntilAnimated: function(targetSelector) {
 			var parentSet = document.querySelectorAll(parentSetSelector);
 			parentSet.forEach(el => {
-				if (el.matches(targetSelector)) {
-					if (fullyOnScreen &&  !elementVisiblity.isElementFullyOnScreen(el)) {
-						el.style.visibility = "hidden";
-					} else if (!fullyOnScreen && !elementVisiblity.isElementPartiallyOnScreen(el)) {
-						el.style.visibility = "hidden";
-					}
+				if (el.matches(targetSelector) && !elementVisiblity.isOnScreenMatch(el, fullyOnScreen)) {
+					el.style.visibility = "hidden";
 				}
 			})
 		}
